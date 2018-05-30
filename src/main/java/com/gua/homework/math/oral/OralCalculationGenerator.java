@@ -57,7 +57,7 @@ public class OralCalculationGenerator {
 		return rList;
 	}
 
-	// Organise to fill column up to max, and leave separate blank column 
+	// Organise to fill column up to max, and leave separate blank column
 	public List<String[]> organizeColumnForPrint(List<String[]> list, int blankColumnCount) {
 
 		if (list == null || list.isEmpty()) {
@@ -100,7 +100,7 @@ public class OralCalculationGenerator {
 		return rList;
 	}
 
-	// Fill separate blank row 
+	// Fill separate blank row
 	public List<String[]> organizeRowForPrint(List<String[]> list, int blankRowCount) {
 
 		if (list == null || list.isEmpty()) {
@@ -114,10 +114,10 @@ public class OralCalculationGenerator {
 				continue;
 			}
 			// logger.debug("sArr:{}", StringUtil.transArrToStr(sArr));
-			
+
 			ll.add(sArr);
-			
-			for (int i=0; i<blankRowCount; i++) {
+
+			for (int i = 0; i < blankRowCount; i++) {
 				ll.add(new String[1]);
 			}
 
@@ -125,35 +125,37 @@ public class OralCalculationGenerator {
 		return ll;
 	}
 
-	// 5 vertical formula + keep 2 blank rows separate  
+	// 5 vertical formula + keep 2 blank rows separate
 	// 40 oral formula
 	// keep 2 formula each row
-	public void createExcelFile(String fileName) {
+	public void createExcelFile(String fileName, int numberOfSheet) {
 
 		PoiExcelObj p = new PoiExcelObj(FileUtil.OnlyForTest_generateFileFullPath(fileName));
 		//
 		// p.add("竖式并验算", this.creatFormulaList(5));
 		// p.add("口算", this.creatFormulaList(40));
 
-		List<String[]> input = new ArrayList<String[]>();
+		for (int i = 0; i < numberOfSheet; i++) {
+			
+			List<String[]> input = new ArrayList<String[]>();
+			// 5道竖式提并且验算
+			String[] title1 = { "竖式并验算" };
+			input.add(title1);
+//			input.add(new String[1]);
+			List<String[]> l1 = this.organizeColumnForPrint(this.creatFormulaList(5), 2);
+			input.addAll(this.organizeRowForPrint(l1, 3));
+	
+			// 2新行分隔
+			input.add(new String[1]);
+	
+			// 40道口算题
+			String[] title2 = { "口算" };
+			input.add(title2);
+//			input.add(new String[1]);
+			input.addAll(this.organizeColumnForPrint(this.creatFormulaList(40), 2));
 
-		// 5道竖式提并且验算
-		String[] title1 = { "竖式并验算" };
-		input.add(title1);
-		input.add(new String[1]);
-		List<String[]> l1 = this.organizeColumnForPrint(this.creatFormulaList(5), 2);
-		input.addAll(this.organizeRowForPrint(l1, 3));
-
-		// 2新行分隔
-		input.add(new String[1]);
-
-		// 40道口算题
-		String[] title2 = { "口算" };
-		input.add(title2);
-		input.add(new String[1]);
-		input.addAll(this.organizeColumnForPrint(this.creatFormulaList(40), 2));
-
-		p.add("test", input);
+			p.add("test_"+(i+1), input);
+		}
 		p.setFontSize(16);
 		PoiUtil.writeToExcelFile(p);
 	}

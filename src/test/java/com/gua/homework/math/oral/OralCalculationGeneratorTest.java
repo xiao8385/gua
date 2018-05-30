@@ -29,6 +29,6 @@ public class OralCalculationGeneratorTest {
 	@Test
 	public void testCreatFormulaList() {
 		
-		generator.createExcelFile("\\list.xlsx");
+		generator.createExcelFile("\\list.xlsx", 7);
 	}
 }
